@@ -18,10 +18,10 @@ void Grid::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	{
 		for(int j = 1; j < m_dim-1; j++)
 		{
-			rectangle.setSize(sf::Vector2f(600/m_dim, 600/m_dim));
+			rectangle.setSize(sf::Vector2f((600+m_dim)/m_dim, (600+m_dim)/m_dim));
 			rectangle.setPosition(i*600/m_dim, j*600/m_dim);
-			rectangle.setOutlineColor(sf::Color::Black);
-			rectangle.setOutlineThickness(1);
+			//rectangle.setOutlineColor(sf::Color::Black);
+			//rectangle.setOutlineThickness(1);
 
 			rectangle.setFillColor(m_table[i][j]);
 			

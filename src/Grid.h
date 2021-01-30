@@ -30,7 +30,7 @@ private :
 	
 private :
 	
-	static constexpr int m_dim = 202;
+	static constexpr int m_dim = 302;
 	double m_valR, m_valG, m_valB;
 	sf::Color m_table[m_dim][m_dim]{sf::Color::Black};
 	std::vector<unsigned> m_cursor;
