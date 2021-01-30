@@ -1,12 +1,11 @@
 #include "Grid.h"
 
 Grid::Grid()
-: m_cursor(2, 1)
-, m_direction(Horizontal)
-, m_level(0)
-, m_seed(std::chrono::steady_clock::now().time_since_epoch().count())
+: m_seed(std::chrono::steady_clock::now().time_since_epoch().count())
 {
 	srand(m_seed);
+	m_cursor.push_back(rand() % (m_dim-2) + 1);
+	m_cursor.push_back(rand() % (m_dim-2) + 1);
 	m_table[m_cursor[0]][m_cursor[1]] = sf::Color(rand() % 245 + 10, rand() % 245 + 10, rand() % 245 + 10);
 }
 
@@ -35,43 +34,9 @@ void Grid::modif(int numRow, int numCol, sf::Color new_value)
 	m_table[numRow][numCol] = new_value;
 }
 
-void Grid::toggleDirection()
-{
-	m_direction = (m_direction == Horizontal) ? Vertical : Horizontal;
-}
-
 void Grid::update()
 {
-	if(m_direction == Horizontal)
-	{
-		if(m_cursor[0] == m_dim-2)
-		{
-			toggleDirection();
-			m_cursor[0] = m_level;
-			++m_level;
-			
-		}
-		++m_cursor[0];
-	}
-	
-	if(m_direction == Vertical)
-	{
-		if(m_cursor[1] == m_dim-2)
-		{
-			toggleDirection();
-			m_cursor[1] = m_level;
-		}
-		++m_cursor[1];
-	}
-	
-	if(m_level == m_dim-2)
-	{
-		m_level = 0;
-		m_cursor[0] = 1;
-		m_cursor[1] = 1;
-	}
-	
-	getNeighboorMean(m_cursor[0], m_cursor[1]);
+	getNeighboorMean();
 	unsigned seed = std::chrono::steady_clock::now().time_since_epoch().count();
 	std::default_random_engine generator(seed);
     std::normal_distribution<double> distN_R(m_valR, 20.);
