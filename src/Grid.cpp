@@ -58,7 +58,7 @@ void Grid::update()
 }
 
 
-void Grid::getNeighboorMean(const int x, const int y)
+void Grid::getNeighboorMean()
 {
 	int x = m_cursor[0];
 	int y = m_cursor[1];
