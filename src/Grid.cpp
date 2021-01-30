@@ -2,11 +2,21 @@
 
 Grid::Grid()
 : m_seed(std::chrono::steady_clock::now().time_since_epoch().count())
-{
+{	
 	srand(m_seed);
 	m_cursor.push_back(rand() % (m_dim-2) + 1);
 	m_cursor.push_back(rand() % (m_dim-2) + 1);
-	m_table[m_cursor[0]][m_cursor[1]] = sf::Color(rand() % 245 + 10, rand() % 245 + 10, rand() % 245 + 10);
+	
+	if(m_black_and_white){
+		unsigned rate = rand() % 245 + 10;
+		m_table[m_cursor[0]][m_cursor[1]] = sf::Color(rate, rate, rate);
+	}
+	else{
+		m_table[m_cursor[0]][m_cursor[1]] = sf::Color(rand() % 245 + 10, rand() % 245 + 10, rand() % 245 + 10);
+		m_dev_r = rand() % 33 + 2;
+		m_dev_g = rand() % 33 + 2;
+		m_dev_b = rand() % 33 + 2;
+	}
 }
 
 void Grid::draw(sf::RenderTarget& target, sf::RenderStates states) const
@@ -37,23 +47,35 @@ void Grid::modif(int numRow, int numCol, sf::Color new_value)
 void Grid::update()
 {
 	getNeighboorMean();
-	std::cout << m_cursor[0] << "  " << m_cursor[1] << std::endl;
 	unsigned seed = std::chrono::steady_clock::now().time_since_epoch().count();
 	std::default_random_engine generator(seed);
-    std::normal_distribution<double> distN_R(m_valR, 7.5);
-	std::normal_distribution<double> distN_G(m_valG, 7.5);
-	std::normal_distribution<double> distN_B(m_valB, 7.5);
-	double r_value = round(distN_R(generator));
-	double g_value = round(distN_G(generator));
-	double b_value = round(distN_B(generator));
-	if(r_value > 255) {r_value = 255;}
-	if(r_value < 10) {r_value = 10;}
-	if(g_value > 255) {g_value = 255;}
-	if(g_value < 10) {g_value = 10;}
-	if(b_value > 255) {b_value = 255;}
-	if(b_value < 10) {b_value = 10;}
-
-	sf::Color new_value = sf::Color(r_value, g_value, b_value);
+	
+	sf::Color new_value;
+	
+	if(m_black_and_white){
+		std::normal_distribution<double> distN_R(m_valR, 20.);
+		double r_value = round(distN_R(generator));
+		if(r_value > 255) {r_value = 255;}
+		if(r_value < 10) {r_value = 10;}
+		
+		new_value = sf::Color(r_value, r_value, r_value);
+	}
+	else{
+		std::normal_distribution<double> distN_R(m_valR, m_dev_r);
+		std::normal_distribution<double> distN_G(m_valG, m_dev_g);
+		std::normal_distribution<double> distN_B(m_valB, m_dev_b);
+		double r_value = round(distN_R(generator));
+		double g_value = round(distN_G(generator));
+		double b_value = round(distN_B(generator));
+		if(r_value > 255) {r_value = 255;}
+		if(r_value < 10) {r_value = 10;}
+		if(g_value > 255) {g_value = 255;}
+		if(g_value < 10) {g_value = 10;}
+		if(b_value > 255) {b_value = 255;}
+		if(b_value < 10) {b_value = 10;}
+		
+		new_value = sf::Color(r_value, g_value, b_value);
+	}
 
 	modif(m_cursor[0], m_cursor[1], new_value);
 }

@@ -23,11 +23,13 @@ private :
 	void toggleDirection();
 
 private :
-	static constexpr int m_dim = 150;
+	static constexpr int m_dim = 200;
 	double m_valR, m_valG, m_valB;
 	sf::Color m_table[m_dim][m_dim]{sf::Color::Black};
 	std::vector<unsigned> m_cursor;
 	unsigned m_seed;
+	float m_dev_r, m_dev_g, m_dev_b;
+	static constexpr bool m_black_and_white = false;
 };
 
 template<typename type>
