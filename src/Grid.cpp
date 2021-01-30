@@ -12,7 +12,7 @@ Grid::Grid()
 void Grid::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	sf::RectangleShape rectangle;
-	
+
 	for(int i = 1; i < m_dim-1; i++)
 	{
 		for(int j = 1; j < m_dim-1; j++)
@@ -23,7 +23,7 @@ void Grid::draw(sf::RenderTarget& target, sf::RenderStates states) const
 			//rectangle.setOutlineThickness(1);
 
 			rectangle.setFillColor(m_table[i][j]);
-			
+
 			target.draw(rectangle, states);
 		}
 	}
@@ -39,9 +39,9 @@ void Grid::update()
 	getNeighboorMean();
 	unsigned seed = std::chrono::steady_clock::now().time_since_epoch().count();
 	std::default_random_engine generator(seed);
-    std::normal_distribution<double> distN_R(m_valR, 20.);
-	std::normal_distribution<double> distN_G(m_valG, 20.);
-	std::normal_distribution<double> distN_B(m_valB, 20.);
+    std::normal_distribution<double> distN_R(m_valR, 25.);
+	std::normal_distribution<double> distN_G(m_valG, 25.);
+	std::normal_distribution<double> distN_B(m_valB, 25.);
 	double r_value = round(distN_R(generator));
 	double g_value = round(distN_G(generator));
 	double b_value = round(distN_B(generator));
@@ -51,85 +51,93 @@ void Grid::update()
 	if(g_value < 10) {g_value = 10;}
 	if(b_value > 255) {b_value = 255;}
 	if(b_value < 10) {b_value = 10;}
-	
+
 	sf::Color new_value = sf::Color(r_value, g_value, b_value);
-	
+
 	modif(m_cursor[0], m_cursor[1], new_value);
 }
 
 
 void Grid::getNeighboorMean()
 {
+	unsigned seed = std::chrono::steady_clock::now().time_since_epoch().count();
+	srand(seed);
 	int x = m_cursor[0];
 	int y = m_cursor[1];
-	
+
 	m_valR=0, m_valG=0, m_valB=0;
 	int count=0;
-	
 
-	int temp_x, temp_y;
-	while(x == temp_x && y != temp_y || x != temp_x && y == temp_y) {
+
+	int temp_x = -10, temp_y = -10;
+	while((x == temp_x || y != temp_y) && (x != temp_x || y == temp_y)) {
 		temp_x = randNb(x-1, x+1);
 		temp_y = randNb(y-1, y+1);
+
+		if(temp_x > m_dim-2) { temp_x = m_dim - 2; }
+		else if(temp_x < 1) { temp_x = 1; }
+
+		if(temp_y > m_dim-2) { temp_y = m_dim - 2; }
+		else if(temp_y < 1) { temp_y = 1; }
 	}
 
 	x = temp_x;
 	y = temp_y;
-	
+
 	if(x == 0 || x == m_dim-1 || y == 0 || y == m_dim-1) { m_valR = 0;  m_valG = 0;  m_valB = 0; }
 	else {
 		// Voisins des cotés ?
-		if( x-1 != 0 && m_table[x-1][y] != sf::Color::Black) { 
+		if( x-1 != 0 && m_table[x-1][y] != sf::Color::Black) {
 			m_valR += m_table[x-1][y].r;
 			m_valG += m_table[x-1][y].g;
 			m_valB += m_table[x-1][y].b;
-			count++; 
+			count++;
 		}
-		if( x+1 != m_dim-1 && m_table[x+1][y] != sf::Color::Black) { 
+		if( x+1 != m_dim-1 && m_table[x+1][y] != sf::Color::Black) {
 			m_valR += m_table[x+1][y].r;
 			m_valG += m_table[x+1][y].g;
 			m_valB += m_table[x+1][y].b;
-			count++; 
+			count++;
 		}
 		if( y-1 != 0 && m_table[x][y-1] != sf::Color::Black) {
 			m_valR += m_table[x][y-1].r;
 			m_valG += m_table[x][y-1].g;
 			m_valB += m_table[x][y-1].b;
-			count++; 
+			count++;
 		}
-		if( y+1 != m_dim-1 && m_table[x][y+1] != sf::Color::Black) { 
+		if( y+1 != m_dim-1 && m_table[x][y+1] != sf::Color::Black) {
 			m_valR += m_table[x][y+1].r;
 			m_valG += m_table[x][y+1].g;
 			m_valB += m_table[x][y+1].b;
-			count++; 
+			count++;
 		}
 
-		/* // Voisins des diagonales ? 
+		 // Voisins des diagonales ?
 		if( x-1 != 0 && y-1 != 0 && m_table[x-1][y-1] != sf::Color::Black) {
 			m_valR += m_table[x-1][y-1].r;
 			m_valG += m_table[x-1][y-1].g;
 			m_valB += m_table[x-1][y-1].b;
-			count++; 
+			count++;
 		}
-		if( x+1 != m_dim-1 && y+1 != m_dim-1 && m_table[x+1][y+1] != sf::Color::Black) { 
+		if( x+1 != m_dim-1 && y+1 != m_dim-1 && m_table[x+1][y+1] != sf::Color::Black) {
 			m_valR += m_table[x+1][y+1].r;
 			m_valG += m_table[x+1][y+1].g;
 			m_valB += m_table[x+1][y+1].b;
-			count++; 
+			count++;
 		}
-		if( x-1 != 0 && y+1 != m_dim-1 && m_table[x-1][y+1] != sf::Color::Black) { 
+		if( x-1 != 0 && y+1 != m_dim-1 && m_table[x-1][y+1] != sf::Color::Black) {
 			m_valR += m_table[x-1][y+1].r;
 			m_valG += m_table[x-1][y+1].g;
 			m_valB += m_table[x-1][y+1].b;
 
-			count++; 
+			count++;
 		}
-		if( x+1 != m_dim-1 && y-1 != 0 && m_table[x+1][y-1] != sf::Color::Black) { 
+		if( x+1 != m_dim-1 && y-1 != 0 && m_table[x+1][y-1] != sf::Color::Black) {
 			m_valR += m_table[x+1][y-1].r;
 			m_valG += m_table[x+1][y-1].g;
 			m_valB += m_table[x+1][y-1].b;
-			count++; 
-		} */
+			count++;
+		}
 
 		m_valR /= count;
 		m_valG /= count;
