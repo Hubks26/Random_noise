@@ -66,13 +66,15 @@ void Grid::getNeighboorMean()
 	m_valR=0, m_valG=0, m_valB=0;
 	int count=0;
 	
-	while(x == 0 || x == m_dim-1 || y == 0 || y == m_dim-1)
-	{
-		while(x != randNb(x-1, x+1) && y != randNb(y-1, y+1)) {}
+
+	int temp_x, temp_y;
+	while(x == temp_x && y != temp_y || x != temp_x && y == temp_y) {
+		temp_x = randNb(x-1, x+1);
+		temp_y = randNb(y-1, y+1);
 	}
 
-	m_cursor[0]=x;
-	m_cursor[1]=y;
+	x = temp_x;
+	y = temp_y;
 	
 	if(x == 0 || x == m_dim-1 || y == 0 || y == m_dim-1) { m_valR = 0;  m_valG = 0;  m_valB = 0; }
 	else {
@@ -102,7 +104,7 @@ void Grid::getNeighboorMean()
 			count++; 
 		}
 
-		// Voisins des diagonales ? 
+		/* // Voisins des diagonales ? 
 		if( x-1 != 0 && y-1 != 0 && m_table[x-1][y-1] != sf::Color::Black) {
 			m_valR += m_table[x-1][y-1].r;
 			m_valG += m_table[x-1][y-1].g;
@@ -127,10 +129,13 @@ void Grid::getNeighboorMean()
 			m_valG += m_table[x+1][y-1].g;
 			m_valB += m_table[x+1][y-1].b;
 			count++; 
-		}
+		} */
 
 		m_valR /= count;
 		m_valG /= count;
 		m_valB /= count;
 	}
+
+	m_cursor[0] = x;
+	m_cursor[1] = y;
 }
