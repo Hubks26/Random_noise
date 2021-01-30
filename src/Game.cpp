@@ -1,6 +1,6 @@
 #include "Game.h"
 
-const sf::Time Game::m_timePerFrame = sf::seconds(0.01);
+const sf::Time Game::m_timePerFrame = sf::seconds(0.00005);
 
 Game::Game()
 : m_window(sf::VideoMode(650, 650), "Random Noise")
