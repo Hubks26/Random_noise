@@ -37,6 +37,7 @@ void Grid::modif(int numRow, int numCol, sf::Color new_value)
 void Grid::update()
 {
 	getNeighboorMean();
+	std::cout << m_cursor[0] << "  " << m_cursor[1] << std::endl;
 	unsigned seed = std::chrono::steady_clock::now().time_since_epoch().count();
 	std::default_random_engine generator(seed);
     std::normal_distribution<double> distN_R(m_valR, 20.);
@@ -59,22 +60,26 @@ void Grid::update()
 
 
 void Grid::getNeighboorMean()
-{
-	int x = m_cursor[0];
-	int y = m_cursor[1];
+{	
+	unsigned seed = std::chrono::steady_clock::now().time_since_epoch().count();
+	srand(seed);
+	
+	int a = 0;
+	int b = 0;
+	
+	while(a == b || (a != 0 && b != 0)){
+		a = rand() % 3 - 1;
+		b = rand() % 3 - 1;
+	}
+	
+	m_cursor[0] += a;
+	m_cursor[1] += b;
+	
+	unsigned x = m_cursor[0];
+	unsigned y = m_cursor[1];
 	
 	m_valR=0, m_valG=0, m_valB=0;
 	int count=0;
-	
-
-	int temp_x, temp_y;
-	while(x == temp_x && y != temp_y || x != temp_x && y == temp_y) {
-		temp_x = randNb(x-1, x+1);
-		temp_y = randNb(y-1, y+1);
-	}
-
-	x = temp_x;
-	y = temp_y;
 	
 	if(x == 0 || x == m_dim-1 || y == 0 || y == m_dim-1) { m_valR = 0;  m_valG = 0;  m_valB = 0; }
 	else {
@@ -104,7 +109,7 @@ void Grid::getNeighboorMean()
 			count++; 
 		}
 
-		/* // Voisins des diagonales ? 
+		// Voisins des diagonales ? 
 		if( x-1 != 0 && y-1 != 0 && m_table[x-1][y-1] != sf::Color::Black) {
 			m_valR += m_table[x-1][y-1].r;
 			m_valG += m_table[x-1][y-1].g;
@@ -129,13 +134,10 @@ void Grid::getNeighboorMean()
 			m_valG += m_table[x+1][y-1].g;
 			m_valB += m_table[x+1][y-1].b;
 			count++; 
-		} */
+		}
 
 		m_valR /= count;
 		m_valG /= count;
 		m_valB /= count;
 	}
-
-	m_cursor[0] = x;
-	m_cursor[1] = y;
 }
