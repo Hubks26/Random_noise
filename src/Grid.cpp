@@ -60,8 +60,19 @@ void Grid::update()
 
 void Grid::getNeighboorMean(const int x, const int y)
 {
+	int x = m_cursor[0];
+	int y = m_cursor[1];
+	
 	m_valR=0, m_valG=0, m_valB=0;
 	int count=0;
+	
+	while(x == 0 || x == m_dim-1 || y == 0 || y == m_dim-1)
+	{
+		while(x != randNb(x-1, x+1) && y != randNb(y-1, y+1)) {}
+	}
+
+	m_cursor[0]=x;
+	m_cursor[1]=y;
 	
 	if(x == 0 || x == m_dim-1 || y == 0 || y == m_dim-1) { m_valR = 0;  m_valG = 0;  m_valB = 0; }
 	else {
