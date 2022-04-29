@@ -3,7 +3,11 @@ Generator of random Perlin noises
 
 ## INSTALLATION
 
- install cmake
+ install SFML
+
+      > sudo apt-get install libsfml-dev
+
+ install CMake
  
       > sudo apt-get install cmake
       
