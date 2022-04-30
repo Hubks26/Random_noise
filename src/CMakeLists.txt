@@ -3,6 +3,9 @@ cmake_minimum_required(VERSION 3.0)
 set (PROJECT_NAME noise)
 project(${PROJECT_NAME})
 
+# Very important, otherwise your executable will be considered as a shared library by your OS
+set (CMAKE_CXX_FLAGS "-no-pie")
+
 set (SOURCES
     Game.cpp
     Grid.cpp
