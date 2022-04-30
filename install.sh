@@ -3,6 +3,8 @@
 echo Launching installation
 cmake .
 cmake --build .
+cmake --install .
+
 echo Cleaning directory..
 rm cmake_install.cmake
 rm CMakeCache.txt
@@ -11,5 +13,7 @@ rm -r CMakeFiles
 rm src/cmake_install.cmake
 rm src/Makefile
 rm -r src/CMakeFiles
-mv src/noise ./noise
+rm src/noise
+rm install_manifest.txt
+
 echo Installation finished

@@ -5,4 +5,18 @@ project(${PROJECT_NAME})
 
 add_subdirectory(src)
 
-install(FILES src/noise DESTINATION ./)
+set(PERMISSIONS OWNER_READ 
+    OWNER_WRITE 
+    OWNER_EXECUTE 
+    GROUP_READ 
+    GROUP_WRITE 
+    GROUP_EXECUTE 
+    WORLD_READ 
+    WORLD_WRITE 
+    WORLD_EXECUTE
+)
+
+install(FILES src/noise 
+    DESTINATION ${CMAKE_CURRENT_SOURCE_DIR} 
+    PERMISSIONS ${PERMISSIONS}
+)
